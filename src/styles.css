@@ -1,0 +1,6 @@
+canvas {
+  border: 1px solid black;
+  background-color: rgb(238, 236, 229);
+  align-items: center;
+  box-sizing: border-box;
+}
