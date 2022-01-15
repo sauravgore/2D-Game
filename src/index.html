@@ -8,6 +8,10 @@
     <title>Start Game</title>
 </head>
 <body onload="startGame()">
+    <div class="move">
+        <button onmousedown="moveLeft()" onmouseup="clearMove()" ontouchstart="moveLeft()">LEFT</button>
+        <button onmousedown="moveRight()" onmouseup="clearMove()" ontouchstart="moveRight()">RIGHT</button>
+    </div>
     <script src="index.js"></script>
 </body>
 </html>

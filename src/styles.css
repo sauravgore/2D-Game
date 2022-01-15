@@ -4,3 +4,9 @@ canvas {
   align-items: center;
   box-sizing: border-box;
 }
+
+.move {
+  text-align: center;
+  width: 180px;
+  height: 180px;
+}
