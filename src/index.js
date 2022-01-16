@@ -1,26 +1,12 @@
 let user;
-let attacker;
+const attacker = [];
+const maxLimit = 500, minLimit = 0;
+let score;
 
-/*
-attacker.src="/img/attaker.png";
-attacker.onload = function() {
-    attackerPos.save();
-    attackerPos.beginPath();
-    attackerPos.arc(25, 25, 25, 0, MATH.PI * 2, true);
-    attackerPos.closePath();
-    attackerPos.clip();
-
-    attackerPos.drawImage(attackerPos, 0, 0, 50, 50);
-    attackerPos.beginPath();
-    attackerPos.arc(0, 0, 25, 0, MATH.PI * 2, true);
-    attackerPos.closePath();
-    attackerPos.clip();
-}
-*/
 
 function startGame() {
-    user = new componentUser(80, 20, "/img/user.png", 90, 480, "image");
-    attacker = new componentAttacker(15, 12, "/img/attacker.png", 100, 5, "image");
+    user = new componentUser(50, 15, "/img/user.png", 90, 480, "image");
+    score = new componentUser("30px", "Consolas", "White", 500, 40, "text");
     gameArea.create();
 }
 
@@ -56,6 +42,11 @@ function componentUser(width, height, color, x, y, type) {
     this.y = y;
     this.update = function() {
         compElm = gameArea.context;
+        if (this.type == "text") {
+            compElm.font = this.width + " " + this.height;
+            compElm.fillStyle = color;
+            compElm.fillText(this.text, this.x, this.y);
+        }
         if (type == "image") {
             compElm.drawImage(this.image, this.x, this.y, this.width, this.height);
         }
@@ -109,14 +100,50 @@ function componentAttacker(width, height, color, x, y, type) {
             this.gravitySpeed = 0;
         }
     }
+
+    this.collideWith = function(obj) {
+        let attackerBottom = this.y + this.height;
+        let userTop = obj.y;
+        let isCollide = false;
+        if (userTop <= attackerBottom) {
+            isCollide = true;
+            alert("Game Over!!!...");
+        }
+        return isCollide;
+    }
 }
 
 function updateCompPosition() {
     gameArea.clear();
     user.newPosition();
     user.update();
-    attacker.newPosition();
-    attacker.update();
+    for (let i = 0; i < attacker.length; i++) {
+        if (attacker[i].collideWith(user)) {
+            gameArea.stop();
+            return;
+        }
+    }
+    gameArea.frameNo++;
+    if (gameArea.frameNo == 1 || everyInterval(100)) {
+        attacker.push(new componentAttacker(10, 12, "/img/attacker.png", 100 + randomNum(), 5, "image"));
+    }
+    for (let i = 0; i < attacker.length; i++) {
+        attacker[i].newPosition();
+        attacker[i].update();
+    }
+    score.text="SCORE: " + gameArea.frameNo;
+    score.update();
+}
+
+function randomNum() {
+    return (Math.random() * (maxLimit - minLimit) + minLimit);
+}
+
+function everyInterval(n) {
+    if ((gameArea.frameNo / n) % 1 == 0) {
+        return true;
+    }
+    return false;
 }
 
 function moveLeft() {
@@ -131,3 +158,22 @@ function clearMove() {
     user.moveX = 0;
     user.moveY = 0;
 }
+
+
+
+/*
+attacker.src="/img/attaker.png";
+attacker.onload = function() {
+    attackerPos.save();
+    attackerPos.beginPath();
+    attackerPos.arc(25, 25, 25, 0, MATH.PI * 2, true);
+    attackerPos.closePath();
+    attackerPos.clip();
+
+    attackerPos.drawImage(attackerPos, 0, 0, 50, 50);
+    attackerPos.beginPath();
+    attackerPos.arc(0, 0, 25, 0, MATH.PI * 2, true);
+    attackerPos.closePath();
+    attackerPos.clip();
+}
+*/
